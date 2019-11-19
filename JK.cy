@@ -8,37 +8,46 @@ APPID = [NSBundle mainBundle].bundleIdentifier,
 APPPATH = [NSBundle mainBundle].bundlePath,
 
 //如果有变化,就用function去定义!!
-HKRootvc = function(){
-return UIApp.keyWindow.rootViewController;
+JKRootvc = function(){
+    return UIApp.keyWindow.rootViewController;
 };
 
 
-HKKeyWindow = function(){
-return UIApp.keyWindow;
+JKKeyWindow = function(){
+    return UIApp.keyWindow;
 };
 
 
-//当前类封装
-
-HKCurrentVC = function(){
-return HKGetCurrentVCFromRootVc(HKRootvc());
+//当前类打印
+JKCurrentVC = function(){
+    return JKGetCurrentVCFromRootVc(JKRootvc());
 };
 
-HKGetCurrentVCFromRootVc = function(rootVC){
-var currentVC;
-if([rootVC presentedViewController]){
-rootVC = [rootVC presentedViewController];
+//某个View层次|这个好像有点问题
+JKView = function(View) {
+    return [View recursiveDescription].toString();
 }
 
-if([rootVC isKindOfClass:[UITabBarController class]]){
-currentVC = HKGetCurrentVCFromRootVc(rootVC.selectedViewController);
-}else if([rootVC isKindOfClass:[UINavigationController class]]){
-currentVC = HKGetCurrentVCFromRootVc(rootVC.visibleViewController);
-}else{
-currentVC = rootVC;
+//当前控制器View层次
+JKCurrentView = function() {
+    return JKView(JKCurrentVC().view);
 }
 
-return currentVC;
+JKGetCurrentVCFromRootVc = function(rootVC){
+    var currentVC;
+    if([rootVC presentedViewController]){
+        rootVC = [rootVC presentedViewController];
+    }
+
+    if([rootVC isKindOfClass:[UITabBarController class]]){
+        currentVC = JKGetCurrentVCFromRootVc(rootVC.selectedViewController);
+    }else if([rootVC isKindOfClass:[UINavigationController class]]){
+        currentVC = JKGetCurrentVCFromRootVc(rootVC.visibleViewController);
+    }else{
+        currentVC = rootVC;
+    }
+
+    return currentVC;
 };
 
 
